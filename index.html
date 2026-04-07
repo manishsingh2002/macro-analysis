@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macroeconomics Masterclass — Global Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════
+   THEME VARIABLES & ELITE RESET
+════════════════════════════════════════ */
+:root[data-theme="dark"] {
+  --bg: #02040a;
+  --bg-gradient: radial-gradient(circle at 50% 0%, #081224 0%, #02040a 80%);
+  --surface: rgba(10, 17, 28, 0.6);
+  --surface-blur: blur(16px);
+  --card: rgba(15, 23, 36, 0.6);
+  --card-hover: rgba(22, 32, 50, 0.8);
+  --border: rgba(30, 42, 63, 0.8);
+  --border-hover: rgba(0, 229, 255, 0.5);
+  
+  --macro-cyan: #00e5ff;
+  --macro-blue: #2979ff;
+  --macro-purple: #b388ff;
+  --macro-emerald: #00e676;
+  --red: #ff1744;
+  --amber: #ff9100;
+  
+  --text-main: #e2e8f0;
+  --text-muted: #8b9bb4;
+  --white: #ffffff;
+  
+  --glow-cyan: 0 0 30px rgba(0, 229, 255, 0.3), inset 0 0 20px rgba(0, 229, 255, 0.05);
+  --glow-blue: 0 0 30px rgba(41, 121, 255, 0.3);
+  --glow-purple: 0 0 30px rgba(179, 136, 255, 0.3);
+  
+  --grid-color: rgba(0, 229, 255, 0.03);
+}
+
+:root[data-theme="light"] {
+  --bg: #f8fafc;
+  --bg-gradient: radial-gradient(circle at 50% 0%, #eef1f6 0%, #f8fafc 80%);
+  --surface: rgba(255, 255, 255, 0.7);
+  --surface-blur: blur(16px);
+  --card: rgba(255, 255, 255, 0.8);
+  --card-hover: rgba(241, 245, 249, 0.9);
+  --border: rgba(203, 213, 225, 0.8);
+  --border-hover: rgba(0, 158, 179, 0.5);
+  
+  --macro-cyan: #009eb3;
+  --macro-blue: #1d4ed8;
+  --macro-purple: #7e22ce;
+  --macro-emerald: #059669;
+  --red: #e11d48;
+  --amber: #d97706;
+  
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --white: #020617;
+  
+  --glow-cyan: 0 10px 40px rgba(0, 158, 179, 0.2);
+  --glow-blue: 0 10px 40px rgba(29, 78, 216, 0.2);
+  --glow-purple: 0 10px 40px rgba(126, 34, 206, 0.2);
+  
+  --grid-color: rgba(0, 158, 179, 0.04);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  background: var(--bg-gradient); color: var(--text-main);
+  font-family: 'Outfit', sans-serif; overflow-x: hidden;
+  transition: background 0.5s ease, color 0.5s ease;
+  min-height: 100vh;
+}
+
+/* Elite Background Grids */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px), 
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 80px 80px; pointer-events: none; z-index: -1;
+}
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(90deg, var(--macro-blue), var(--macro-cyan)); z-index: 10000; width: 0%; box-shadow: var(--glow-cyan); transition: width 0.1s; }
+.ambient-glow { position: absolute; width: 1200px; height: 1200px; background: radial-gradient(circle, rgba(0,229,255,0.04) 0%, transparent 50%); top: 40%; left: 60%; transform: translate(-50%, -50%); pointer-events: none; z-index: -2; filter: blur(80px); animation: pulseGlow 15s infinite alternate ease-in-out; }
+@keyframes pulseGlow { 0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.7) rotate(0deg); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(15deg); } }
+
+/* Precision Cursor */
+@media (hover: hover) {
+  body { cursor: none; }
+  .cursor-dot { position: fixed; width: 6px; height: 6px; background: var(--macro-cyan); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.1s, height 0.1s; box-shadow: var(--glow-cyan); }
+  .cursor-ring { position: fixed; width: 44px; height: 44px; border: 1px solid var(--macro-cyan); border-radius: 50%; pointer-events: none; z-index: 9998; opacity: 0.4; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, transform 0.05s ease-out; backdrop-filter: invert(10%); }
+}
+
+/* ════════════════════════════════════════
+   GLASSMORPHISM LAYOUT
+════════════════════════════════════════ */
+.layout-wrapper { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 300px; background: var(--surface); backdrop-filter: var(--surface-blur);
+  border-right: 1px solid var(--border); height: 100vh; position: sticky; top: 0;
+  padding: 40px 0; display: flex; flex-direction: column; z-index: 100;
+}
+.brand {
+  padding: 0 40px 30px; border-bottom: 1px solid var(--border);
+  font-family: 'Bebas Neue', sans-serif; font-size: 38px; color: var(--white);
+  letter-spacing: 2px; text-shadow: var(--glow-cyan);
+}
+.brand span { color: var(--macro-cyan); }
+
+.nav-links { padding: 30px 0; overflow-y: auto; flex-grow: 1; }
+.nav-link {
+  display: flex; align-items: center; padding: 14px 40px; color: var(--text-muted);
+  text-decoration: none; font-size: 14px; font-weight: 500; border-left: 4px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-link:hover, .nav-link.active { color: var(--macro-cyan); background: linear-gradient(90deg, rgba(0, 229, 255, 0.08) 0%, transparent 100%); border-left-color: var(--macro-cyan); padding-left: 45px; }
+.nav-link-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-right: 15px; opacity: 0.5; color: var(--white); }
+
+.sidebar-footer { padding: 30px 40px; border-top: 1px solid var(--border); }
+.theme-btn {
+  width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--card);
+  color: var(--text-main); font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s;
+  backdrop-filter: var(--surface-blur);
+}
+.theme-btn:hover { border-color: var(--macro-cyan); box-shadow: var(--glow-cyan); color: var(--macro-cyan); transform: translateY(-2px); }
+
+.main-content { flex-grow: 1; width: calc(100% - 300px); }
+
+/* Mobile Header */
+.mobile-header {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; background: var(--surface);
+  backdrop-filter: var(--surface-blur); padding: 20px 24px; border-bottom: 1px solid var(--border); z-index: 1000;
+}
+.menu-toggle { background: none; border: none; color: var(--text-main); font-size: 28px; cursor: pointer; }
+
+/* ════════════════════════════════════════
+   TYPOGRAPHY & HIGH-END COMPONENTS
+════════════════════════════════════════ */
+.hero { min-height: 100vh; padding: 100px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+.live-badge {
+  display: inline-flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--macro-cyan); margin-bottom: 30px;
+  padding: 8px 16px; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 30px; background: rgba(0, 229, 255, 0.05);
+  box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.05);
+}
+.live-dot { width: 8px; height: 8px; background: var(--macro-cyan); border-radius: 50%; animation: pulse 1.5s infinite; box-shadow: 0 0 10px var(--macro-cyan); }
+.hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 8vw, 130px); line-height: 0.85; color: var(--white); margin-bottom: 30px; letter-spacing: 1px; }
+.hero h1 span { color: transparent; -webkit-text-stroke: 1px var(--macro-cyan); }
+[data-theme="light"] .hero h1 span { -webkit-text-stroke: 2px var(--macro-cyan); }
+.hero p { font-size: clamp(18px, 2vw, 22px); color: var(--text-muted); max-width: 800px; line-height: 1.7; font-weight: 300; }
+
+.chapter { padding: 120px 100px; border-top: 1px solid var(--border); position: relative; }
+.ch-meta { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--macro-cyan); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+.ch-meta::before { content: ''; width: 40px; height: 2px; background: var(--macro-cyan); box-shadow: var(--glow-cyan); }
+.ch-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(45px, 6vw, 85px); color: var(--white); line-height: 0.9; margin-bottom: 30px; letter-spacing: 1px; }
+.ch-title em { font-style: italic; color: transparent; -webkit-text-stroke: 1px var(--macro-blue); }
+[data-theme="light"] .ch-title em { -webkit-text-stroke: 2px var(--macro-blue); }
+.ch-desc { font-size: 20px; color: var(--text-muted); max-width: 900px; line-height: 1.8; margin-bottom: 70px; font-weight: 300; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
+
+/* Elite Cards with Glassmorphism */
+.card {
+  background: var(--card); backdrop-filter: var(--surface-blur); border: 1px solid var(--border);
+  border-radius: 16px; padding: 40px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%); pointer-events: none;
+}
+.card:hover { transform: translateY(-10px); border-color: var(--border-hover); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+.card-indicator { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; font-weight: 600; }
+.c-cyan { color: var(--macro-cyan); } .c-blue { color: var(--macro-blue); } .c-purple { color: var(--macro-purple); } .c-emerald { color: var(--macro-emerald); } .c-red { color: var(--red); } .c-amber { color: var(--amber); }
+.card h3 { font-size: 26px; color: var(--white); margin-bottom: 16px; font-weight: 600; line-height: 1.3; }
+.card p { font-size: 16px; color: var(--text-muted); line-height: 1.7; }
+
+/* Deep Dive Callouts */
+.callout {
+  padding: 30px; border-radius: 0 16px 16px 0; margin: 40px 0;
+  border-left: 4px solid var(--macro-cyan); background: var(--card); backdrop-filter: var(--surface-blur);
+  box-shadow: 20px 20px 60px rgba(0,0,0,0.1); position: relative;
+}
+.callout::after { content: 'MACRO NOTE'; position: absolute; top: -10px; right: 20px; background: var(--bg); padding: 4px 12px; border: 1px solid var(--border); border-radius: 20px; font-family: 'JetBrains Mono'; font-size: 10px; color: var(--text-muted); letter-spacing: 2px; }
+.callout.amber { border-left-color: var(--amber); } .callout.purple { border-left-color: var(--macro-purple); } .callout.red { border-left-color: var(--red); }
+.callout strong { display: block; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; }
+
+/* Institutional SVG Utilities */
+.svg-container {
+  background: var(--card-hover); border: 1px solid var(--border); border-radius: 16px;
+  padding: 40px; margin-bottom: 40px; position: relative; overflow: hidden;
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.2);
+}
+.svg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-main); letter-spacing: 0.2em; font-weight: 600; }
+.badge { padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+.bg-cyan { background: rgba(0, 229, 255, 0.1); color: var(--macro-cyan); border: 1px solid rgba(0, 229, 255, 0.3); }
+.bg-purple { background: rgba(179, 136, 255, 0.1); color: var(--macro-purple); border: 1px solid rgba(179, 136, 255, 0.3); }
+.bg-emerald { background: rgba(0, 230, 118, 0.1); color: var(--macro-emerald); border: 1px solid rgba(0, 230, 118, 0.3); }
+.bg-red { background: rgba(255,51,85,0.1); color: var(--red); border: 1px solid rgba(255,51,85,0.3); }
+
+/* Advanced Animations */
+.reveal { opacity: 0; transform: translateY(50px); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+@keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--macro-cyan); } 50% { opacity: 0.4; box-shadow: none; } }
+@keyframes dashFlow { to { stroke-dashoffset: -20; } }
+@keyframes gearSpin { 100% { transform: rotate(360deg); } }
+
+/* Master Screener (Checklist) */
+.checklist-wrapper { background: var(--card); backdrop-filter: var(--surface-blur); border: 1px solid var(--macro-cyan); border-radius: 20px; overflow: hidden; box-shadow: var(--glow-cyan); }
+.chk-header { background: linear-gradient(90deg, rgba(0, 229, 255, 0.1) 0%, transparent 100%); padding: 40px 50px; border-bottom: 1px solid var(--border); }
+.chk-body { padding: 50px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+.chk-title { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 24px; color: var(--macro-cyan); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+.custom-chk { display: none; }
+.chk-label { display: flex; align-items: flex-start; gap: 16px; font-size: 16px; color: var(--text-muted); cursor: pointer; transition: all 0.3s; padding: 12px 16px; border-radius: 10px; border: 1px solid transparent; line-height: 1.5; }
+.chk-label:hover { color: var(--text-main); background: var(--card-hover); border-color: var(--border); transform: translateX(5px); }
+.chk-box-ui { width: 24px; height: 24px; border: 2px solid var(--text-muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); margin-top: 2px; background: var(--bg); }
+.custom-chk:checked + .chk-label { color: var(--text-muted); opacity: 0.5; text-decoration: line-through; }
+.custom-chk:checked + .chk-label .chk-box-ui { background: var(--macro-cyan); border-color: var(--macro-cyan); box-shadow: var(--glow-cyan); transform: scale(1.15); }
+.custom-chk:checked + .chk-label .chk-box-ui::after { content: '✓'; color: var(--bg); font-weight: 900; font-size: 16px; }
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .hero h1 { font-size: clamp(50px, 6vw, 90px); }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .chk-body { grid-template-columns: 1fr; }
+}
+@media (max-width: 1024px) {
+  .sidebar { width: 260px; } .main-content { width: calc(100% - 260px); }
+  .hero, .chapter { padding: 80px 40px; }
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); position: fixed; box-shadow: 20px 0 50px rgba(0,0,0,0.8); z-index: 1001; }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { width: 100%; margin-top: 70px; } .mobile-header { display: flex; justify-content: space-between; }
+  .hero, .chapter { padding: 60px 20px; }
+  .chk-header { padding: 30px 20px; } .chk-body { padding: 30px 20px; gap: 30px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="layout-wrapper">
+  
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <div class="brand" style="padding:0; border:none; font-size:28px;">MACRO<span>.PRO</span></div>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">MACRO<span>.PRO</span></div>
+    <nav class="nav-links">
+      <a href="#hero" class="nav-link active"><span class="nav-link-num">00</span> The Ocean</a>
+      <a href="#ch1" class="nav-link"><span class="nav-link-num">01</span> The Gravity of Money</a>
+      <a href="#ch2" class="nav-link"><span class="nav-link-num">02</span> The Liquidity Engine</a>
+      <a href="#ch3" class="nav-link"><span class="nav-link-num">03</span> The Yield Curve</a>
+      <a href="#ch4" class="nav-link"><span class="nav-link-num">04</span> The Inflation Dragon</a>
+      <a href="#ch5" class="nav-link"><span class="nav-link-num">05</span> King Dollar & EMs</a>
+      <a href="#ch6" class="nav-link"><span class="nav-link-num">06</span> The Commodity Tax</a>
+      <a href="#ch7" class="nav-link"><span class="nav-link-num">07</span> Anatomy of a Macro Trade</a>
+      <a href="#ch8" class="nav-link"><span class="nav-link-num">08</span> Master Screener</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="theme-btn" id="themeToggle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        Toggle Theme
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="ambient-glow"></div>
+      <div class="live-badge"><span class="live-dot"></span> Institutional Top-Down Framework</div>
+      <h1>HOW REAL<br><span>HEDGE FUNDS</span><br>TRADE THE MACRO</h1>
+      <p>Stocks do not move in a vacuum. A great company in a tightening economy will still fall. Real institutional wealth is built by surfing the tidal waves of global liquidity, deciphering Central Bank mandates, and front-running the global business cycle.</p>
+    </section>
+
+    <!-- CHAPTER 1: INTEREST RATES -->
+    <section class="chapter" id="ch1">
+      <div class="ch-meta">Chapter 01</div>
+      <h2 class="ch-title">THE <em>GRAVITY</em><br>OF MONEY</h2>
+      <p class="ch-desc">Interest rates are the gravity of financial markets. Warren Buffett famously said, "Interest rates power everything in the economic universe." If rates are zero, asset valuations fly. If rates hit 5%, valuations crash back to earth.</p>
+
+      <div class="svg-container reveal">
+        <div class="svg-header"><span>THE MACRO SEESAW</span><span class="badge bg-cyan">CORE PRINCIPLE</span></div>
+        <svg viewBox="0 0 800 300" style="width:100%; height:auto;">
+          <defs>
+            <linearGradient id="fulcrumGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--border-hover)"/>
+              <stop offset="100%" stop-color="var(--bg)"/>
+            </linearGradient>
+          </defs>
+          <!-- Base / Fulcrum -->
+          <polygon points="350,260 450,260 400,180" fill="url(#fulcrumGrad)" stroke="var(--macro-cyan)" stroke-width="2"/>
+          <line x1="100" y1="260" x2="700" y2="260" stroke="var(--border)" stroke-width="2" stroke-dasharray="8,4"/>
+          
+          <!-- The Board (Animated Seesaw) -->
+          <g style="transform-origin: 400px 180px; animation: seesaw 10s ease-in-out infinite alternate;">
+            <rect x="150" y="170" width="500" height="12" fill="var(--card)" stroke="var(--border-hover)" stroke-width="2" rx="6"/>
+            
+            <!-- Left Side: Interest Rates (Heavy) -->
+            <rect x="180" y="60" width="90" height="110" fill="var(--surface)" stroke="var(--macro-cyan)" stroke-width="2" rx="8"/>
+            <text x="225" y="95" fill="var(--macro-cyan)" font-family="monospace" font-weight="bold" font-size="16" text-anchor="middle">FED</text>
+            <text x="225" y="115" fill="var(--macro-cyan)" font-family="monospace" font-weight="bold" font-size="16" text-anchor="middle">RATES</text>
+            <text x="225" y="150" fill="var(--white)" font-family="Bebas Neue" font-size="32" text-anchor="middle">UP ↑</text>
+            
+            <!-- Right Side: Equities (Light/Falling) -->
+            <rect x="530" y="110" width="90" height="60" fill="var(--surface)" stroke="var(--macro-purple)" stroke-width="2" rx="8"/>
+            <text x="575" y="135" fill="var(--macro-purple)" font-family="monospace" font-weight="bold" font-size="14" text-anchor="middle">EQUITY</text>
+            <text x="575" y="160" fill="var(--white)" font-family="Bebas Neue" font-size="24" text-anchor="middle">DOWN ↓</text>
+          </g>
+
+          <!-- Key Text -->
+          <text x="400" y="40" fill="var(--white)" font-size="18" text-anchor="middle" font-weight="600" letter-spacing="1px">"Risk-Free" Yield dictates the value of "Risk" Assets.</text>
+
+          <style>
+            @keyframes seesaw {
+              0% { transform: rotate(15deg); }
+              20% { transform: rotate(15deg); }
+              40% { transform: rotate(-15deg); }
+              60% { transform: rotate(-15deg); }
+              80% { transform: rotate(10deg); }
+              100% { transform: rotate(10deg); }
+            }
+          </style>
+        </svg>
+      </div>
+
+      <div class="grid-2 reveal">
+        <div class="card" style="border-top: 4px solid var(--macro-cyan);">
+          <div class="card-indicator c-cyan">The Discount Rate</div>
+          <h3>Valuations & The DCF</h3>
+          <p>Every stock is theoretically valued using a Discounted Cash Flow (DCF) model. The "Discount Rate" is tied directly to the 10-Year Government Bond yield. When bond yields rise from 2% to 5%, the denominator in the DCF formula explodes, crushing the present value of future earnings (especially for high-growth tech stocks).</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--macro-blue);">
+          <div class="card-indicator c-blue">Central Banks (Fed & RBI)</div>
+          <h3>The Dual Mandate</h3>
+          <p>Central Banks control short-term rates. They have two conflicting jobs: Keep inflation low (by raising rates to cool demand) and keep employment high (by lowering rates). Understanding which side of the mandate they are fighting tells you where global money is heading.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 2: LIQUIDITY (QE/QT) -->
+    <section class="chapter" id="ch2" style="background: rgba(0, 230, 118, 0.02);">
+      <div class="ch-meta">Chapter 02</div>
+      <h2 class="ch-title">THE LIQUIDITY <em>ENGINE</em><br>(QE & QT)</h2>
+      <p class="ch-desc">Interest rates are the cost of money. Liquidity is the *amount* of money. Since 2008, Central Bank balance sheets (money printing) have driven stock markets more than corporate earnings.</p>
+
+      <div class="svg-container reveal">
+        <div class="svg-header"><span>QUANTITATIVE EASING (MONEY PRINTING)</span><span class="badge bg-emerald">LIQUIDITY FLOW</span></div>
+        <svg viewBox="0 0 800 350" style="width:100%; height:auto;">
+          <!-- Central Bank -->
+          <rect x="50" y="50" width="160" height="120" fill="var(--card)" stroke="var(--macro-emerald)" stroke-width="2" rx="10"/>
+          <text x="130" y="90" fill="var(--macro-emerald)" font-family="Bebas Neue" font-size="28" text-anchor="middle">CENTRAL BANK</text>
+          <text x="130" y="120" fill="var(--text-muted)" font-family="monospace" font-size="12" text-anchor="middle">Creates Digital Reserves</text>
+          <circle cx="130" cy="145" r="15" fill="none" stroke="var(--macro-emerald)" stroke-width="2" stroke-dasharray="4,2" style="animation: gearSpin 4s linear infinite; transform-origin: 130px 145px;"/>
+          
+          <!-- Pipes & Flow -->
+          <path d="M210,110 L400,110 L400,200" fill="none" stroke="var(--border)" stroke-width="20" stroke-linejoin="round"/>
+          <path d="M210,110 L400,110 L400,200" fill="none" stroke="var(--macro-emerald)" stroke-width="12" stroke-linejoin="round" stroke-dasharray="20,15" style="animation: dashFlow 1s linear infinite reverse;"/>
+          <text x="300" y="90" fill="var(--macro-emerald)" font-family="monospace" font-weight="bold" font-size="14" text-anchor="middle">Buys Bonds (QE)</text>
+
+          <!-- Commercial Banks / System -->
+          <rect x="320" y="200" width="160" height="80" fill="var(--card)" stroke="var(--macro-blue)" stroke-width="2" rx="10"/>
+          <text x="400" y="235" fill="var(--macro-blue)" font-family="Bebas Neue" font-size="24" text-anchor="middle">BOND MARKET</text>
+          <text x="400" y="260" fill="var(--text-muted)" font-family="monospace" font-size="10" text-anchor="middle">Yields Crushed</text>
+
+          <!-- Secondary Flow to Risk Assets -->
+          <path d="M480,240 L650,240" fill="none" stroke="var(--border)" stroke-width="10"/>
+          <path d="M480,240 L650,240" fill="none" stroke="var(--macro-blue)" stroke-width="6" stroke-dasharray="15,10" style="animation: dashFlow 1s linear infinite reverse;"/>
+          <text x="565" y="225" fill="var(--text-main)" font-family="monospace" font-size="12" text-anchor="middle">Capital Seeks Return</text>
+
+          <!-- Risk Assets Tank (Equities) -->
+          <path d="M600,100 L600,300 L750,300 L750,100" fill="none" stroke="var(--macro-cyan)" stroke-width="4"/>
+          <!-- Liquid Level -->
+          <rect x="604" y="180" width="142" height="116" fill="var(--macro-cyan)" opacity="0.3"/>
+          <line x1="604" y1="180" x2="746" y2="180" stroke="var(--macro-cyan)" stroke-width="3"/>
+          <text x="675" y="250" fill="var(--white)" font-family="Bebas Neue" font-size="32" text-anchor="middle">EQUITIES</text>
+          <text x="675" y="280" fill="var(--bg)" font-family="monospace" font-weight="bold" font-size="14" text-anchor="middle">Inflate ↑</text>
+        </svg>
+      </div>
+
+      <div class="grid-2 reveal">
+        <div class="card" style="border-left: 4px solid var(--macro-emerald);">
+          <div class="card-indicator c-emerald">Quantitative Easing (QE)</div>
+          <h3 style="color:var(--white);">The Wealth Effect</h3>
+          <p>The Central Bank creates digital money to buy government bonds. This removes safe assets from the market and crushes yields. Investors, desperate for return, are forced to buy riskier assets (Stocks, Real Estate, Crypto), causing massive bull markets. *Rule: Do not short when the Fed is printing.*</p>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--red);">
+          <div class="card-indicator c-red">Quantitative Tightening (QT)</div>
+          <h3 style="color:var(--white);">Draining the Pool</h3>
+          <p>The exact reverse. The Central Bank destroys digital money by letting bonds mature. Liquidity is sucked out of the financial system. The stock market is a swimming pool, and QT is pulling the drain plug. Asset prices must fall to match the shrinking money supply.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 3: THE YIELD CURVE -->
+    <section class="chapter" id="ch3" style="background: rgba(179, 136, 255, 0.02);">
+      <div class="ch-meta">Chapter 03</div>
+      <h2 class="ch-title">THE ULTIMATE ORACLE<br><em>(YIELD CURVE)</em></h2>
+      <p class="ch-desc">If you could only look at one chart to predict a recession, it is the U.S. Treasury Yield Curve. It is the collective wisdom of the smartest bond traders in the world.</p>
+
+      <div class="svg-container reveal">
+        <div class="svg-header"><span>NORMAL VS. INVERTED CURVE</span><span class="badge bg-purple">RECESSION INDICATOR</span></div>
+        <svg viewBox="0 0 800 300" style="width:100%; height:auto;">
+          <!-- Axes -->
+          <line x1="60" y1="250" x2="760" y2="250" stroke="var(--border-hover)" stroke-width="2"/>
+          <line x1="60" y1="40" x2="60" y2="250" stroke="var(--border-hover)" stroke-width="2"/>
+          
+          <!-- X Axis Labels (Time) -->
+          <text x="180" y="280" fill="var(--text-muted)" font-family="monospace" font-size="13" text-anchor="middle">2-Year</text>
+          <text x="450" y="280" fill="var(--text-muted)" font-family="monospace" font-size="13" text-anchor="middle">10-Year</text>
+          <text x="700" y="280" fill="var(--text-muted)" font-family="monospace" font-size="13" text-anchor="middle">30-Year</text>
+          
+          <!-- Y Axis Label -->
+          <text x="30" y="150" fill="var(--text-muted)" font-family="monospace" font-size="13" transform="rotate(-90 30,150)" text-anchor="middle">Yield (%)</text>
+
+          <!-- Normal Curve (Green) -->
+          <path d="M80,220 Q450,180 720,60" fill="none" stroke="var(--macro-emerald)" stroke-width="5" stroke-dasharray="8,6" opacity="0.6"/>
+          <text x="600" y="50" fill="var(--macro-emerald)" font-family="monospace" font-weight="bold" font-size="16">Normal (Expansion)</text>
+
+          <!-- Inverted Curve (Red) -->
+          <path d="M80,70 Q350,90 720,230" fill="none" stroke="var(--red)" stroke-width="5" style="filter: drop-shadow(0 0 10px rgba(255,23,68,0.5));"/>
+          <circle cx="180" cy="75" r="8" fill="var(--red)"/>
+          <circle cx="450" cy="133" r="8" fill="var(--red)"/>
+          <text x="250" y="50" fill="var(--red)" font-family="monospace" font-weight="bold" font-size="16">Inverted (Recession Warning)</text>
+          
+          <!-- Annotation -->
+          <path d="M180,65 L180,30 L280,30" fill="none" stroke="var(--text-muted)" stroke-width="2"/>
+          <text x="290" y="35" fill="var(--white)" font-size="14">Short-term pays MORE than long-term.</text>
+        </svg>
+      </div>
+
+      <div class="grid-2 reveal">
+        <div class="callout purple">
+          <strong class="c-purple">What is an Inversion?</strong>
+          Normally, you demand higher interest to lock up your money for 10 years versus 2 years (Normal Curve). When the 2-Year Treasury pays *more* than the 10-Year, the curve is "Inverted". It means institutional investors expect the Central Bank to aggressively slash rates in the future because a severe recession or crisis is coming.
+        </div>
+        <div class="card" style="border-left: 4px solid var(--red);">
+          <div class="card-indicator c-red">The Un-Inversion Trap</div>
+          <h3>When the Trap Springs</h3>
+          <p>Markets often rally *while* the curve is deeply inverted. The actual stock market crash usually begins exactly when the curve "un-inverts" (steepens back to normal). Why? Because the Central Bank is finally panicking and aggressively cutting short-term rates to zero to save a rapidly collapsing economy.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 4: INFLATION & STAGFLATION -->
+    <section class="chapter" id="ch4" style="background: rgba(255, 145, 0, 0.03);">
+      <div class="ch-meta">Chapter 04</div>
+      <h2 class="ch-title">THE INFLATION <em>DRAGON</em><br>(STAGFLATION)</h2>
+      <p class="ch-desc">Inflation is the silent killer of portfolios. It forces central banks to hike interest rates and destroy demand, even if the economy is already weak—a nightmare scenario called Stagflation.</p>
+
+      <div class="grid-3 reveal">
+        <div class="card" style="border-top: 3px solid var(--amber);">
+          <div class="card-indicator c-amber">Demand-Pull Inflation</div>
+          <h3>Too Much Money</h3>
+          <p>Caused by massive fiscal stimulus (government handouts) and QE. "Too much money chasing too few goods." This type of inflation usually coincides with booming corporate earnings, until the Fed steps in to destroy the party.</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--red);">
+          <div class="card-indicator c-red">Cost-Push Inflation</div>
+          <h3>Supply Chain Shocks</h3>
+          <p>Caused by wars, energy crises, or broken supply chains. The cost of raw materials explodes. Companies cannot pass all costs to consumers, so profit margins collapse. This is the most toxic environment for equities.</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--macro-purple);">
+          <div class="card-indicator c-purple">The Fed's Nightmare</div>
+          <h3>Stagflation</h3>
+          <p>Growth is slowing (stagnation) but prices are rising (inflation). The Central Bank is trapped: If they cut rates to help growth, inflation explodes. If they hike rates to kill inflation, they cause a deep recession. Cash and Gold are the only hiding spots.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 5: CURRENCY & DXY -->
+    <section class="chapter" id="ch5">
+      <div class="ch-meta">Chapter 05</div>
+      <h2 class="ch-title">KING DOLLAR &<br><em>EMERGING MARKETS</em></h2>
+      <p class="ch-desc">If you are trading in India (or any Emerging Market), you are implicitly trading the US Dollar. The Dollar Index (DXY) is the wrecking ball of global finance.</p>
+
+      <div class="grid-2 reveal">
+        <!-- Strong Dollar -->
+        <div class="card" style="border-left: 4px solid var(--red);">
+          <div class="card-indicator c-red">DXY Up (Strong USD) = EM Pain</div>
+          <h3 style="color:var(--white);">Capital Flight</h3>
+          <p>When the Fed raises rates aggressively, the US Dollar yields more. Global capital flees risky Emerging Markets (like India) and floods into safe US Treasuries. FIIs (Foreign Institutional Investors) sell Indian stocks heavily. The Rupee depreciates, causing severe imported inflation (especially for oil).</p>
+        </div>
+        
+        <!-- Weak Dollar -->
+        <div class="card" style="border-left: 4px solid var(--macro-emerald);">
+          <div class="card-indicator c-emerald">DXY Down (Weak USD) = EM Boom</div>
+          <h3 style="color:var(--white);">The Liquidity Flood</h3>
+          <p>When the Fed cuts rates or prints money, the Dollar weakens. Capital seeks higher yields globally. FII money floods into Emerging Markets looking for growth. This is historically when the Nifty, Indian Midcaps, and emerging tech sectors experience their most violent, multi-year bull runs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 6: COMMODITIES -->
+    <section class="chapter" id="ch6" style="background: rgba(41, 121, 255, 0.03);">
+      <div class="ch-meta">Chapter 06</div>
+      <h2 class="ch-title">THE COMMODITY <em>TAX</em><br>(CRUDE OIL)</h2>
+      <p class="ch-desc">For the US, oil is an industry. For India, oil is a massive, uncontrollable macroeconomic tax. Understanding the commodity cycle is non-negotiable for Indian investors.</p>
+
+      <div class="grid-2 reveal">
+        <div class="card" style="padding: 50px;">
+          <div class="card-indicator c-amber">The Crude Oil Tax</div>
+          <h3 style="color:var(--white); font-size:28px; line-height:1.2;">India's Achilles Heel</h3>
+          <p style="margin-top: 20px;">India imports over 80% of its crude oil requirements. When Brent Crude spikes above $90/barrel:<br><br>
+          <span style="color:var(--macro-cyan); font-weight:bold;">1. Current Account Deficit widens:</span> We pay more dollars outward.<br><br>
+          <span style="color:var(--macro-cyan); font-weight:bold;">2. Rupee falls:</span> Driven by aggressive dollar demand to buy the oil.<br><br>
+          <span style="color:var(--macro-cyan); font-weight:bold;">3. Inflation spikes:</span> Fuel costs raise transport costs for *everything*.<br><br>
+          <span style="color:var(--macro-cyan); font-weight:bold;">4. Margins collapse:</span> FMCG, Paints, Aviation, and Auto sectors see raw material costs explode, crushing earnings.</p>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 40px;">
+          <div class="callout cyan" style="margin: 0; border-left-color: var(--macro-cyan);">
+            <strong class="c-cyan">The "Goldilocks" Zone for Nifty</strong>
+            The perfect macro setup for the Indian stock market is: <br><br><strong>Falling DXY (Weak Dollar) <br>+ Crude Oil between $60 and $75 <br>+ Stable US Interest Rates.</strong> <br><br>When these three align, you leverage up and buy Indian equities heavily. The wind is entirely at your back.
+          </div>
+          <div class="card" style="padding: 30px;">
+            <div class="card-indicator c-amber">Gold as a Macro Hedge</div>
+            <p style="font-size: 15px;">Gold does not pay a yield. It is purely an anti-fiat, anti-crisis asset. It moves inverse to *Real Interest Rates* (Nominal Rate minus Inflation). If inflation is 6% and rates are 4%, Real Rates are negative (-2%). Gold explodes upward in this environment as cash destroys wealth.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 7: ANATOMY OF A MACRO TRADE -->
+    <section class="chapter" id="ch7">
+      <div class="ch-meta">Chapter 07</div>
+      <h2 class="ch-title">ANATOMY OF A<br><em>MACRO TRADE</em></h2>
+      <p class="ch-desc">How do hedge funds put this all together? Let's break down the legendary 2022 Macro setup: "The Great Inflation Pivot".</p>
+
+      <div class="svg-container reveal" style="padding: 0; border: none; background: transparent; box-shadow: none;">
+        <div class="grid-3" style="gap: 30px;">
+          <!-- Step 1 -->
+          <div class="card" style="border-top: 4px solid var(--red);">
+            <div class="card-indicator c-red">STEP 1: The Catalyst</div>
+            <h3 style="font-size: 20px;">CPI Surprises Upside</h3>
+            <p style="font-size: 14px;">US CPI (Inflation) prints at 8.5%, much hotter than expected. The narrative shifts instantly: Inflation is NOT "transitory." The Federal Reserve is way behind the curve.</p>
+          </div>
+          <!-- Step 2 -->
+          <div class="card" style="border-top: 4px solid var(--macro-blue);">
+            <div class="card-indicator c-blue">STEP 2: The Reaction</div>
+            <h3 style="font-size: 20px;">The Fed Panics</h3>
+            <p style="font-size: 14px;">The Fed announces aggressive rate hikes (75 bps) and the start of Quantitative Tightening (QT). The "Gravity of Money" is suddenly turned up to maximum.</p>
+          </div>
+          <!-- Step 3 -->
+          <div class="card" style="border-top: 4px solid var(--macro-emerald);">
+            <div class="card-indicator c-emerald">STEP 3: The Trade Execution</div>
+            <h3 style="font-size: 20px;">Short Duration, Long USD</h3>
+            <p style="font-size: 14px;">Hedge funds violently short high-P/E Tech stocks (whose DCF valuations collapse under high rates). They go long the US Dollar (DXY) as capital floods to the US for yield. Emerging Markets crash.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout purple reveal" style="margin-top:0;">
+        <strong class="c-purple">The Takeaway</strong>
+        Macro trading is not about predicting the economy; it is about predicting the <strong>Central Bank's reaction</strong> to the economy. In 2022, you didn't need to be a stock-picking genius. If you got the macro direction right (Rates Up = Tech Down, DXY Up), you made a fortune. If you got it wrong, your fundamentals didn't matter.
+      </div>
+    </section>
+
+    <!-- CHAPTER 8: MASTER SCREENER -->
+    <section class="chapter" id="ch8">
+      <div class="ch-meta">The Grand Finale</div>
+      <h2 class="ch-title">MACRO <em>DASHBOARD</em><br>CHECKLIST</h2>
+      <p class="ch-desc">Before allocating heavy capital to equities, run this top-down global environment check. Trade with the wind, not against the hurricane. Your progress is saved locally.</p>
+
+      <div class="checklist-wrapper reveal">
+        <div class="chk-header">
+          <h3 style="font-family:'Bebas Neue',sans-serif; font-size:38px; color:var(--macro-cyan); letter-spacing:2px; text-shadow: var(--glow-cyan);">THE GLOBAL CURRENT PROTOCOL</h3>
+        </div>
+        <div class="chk-body">
+          <div class="chk-section">
+            <div class="chk-title">01. Central Bank Posture (Liquidity)</div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk1" class="custom-chk">
+              <label for="mchk1" class="chk-label"><div class="chk-box-ui"></div> The US Fed has paused rate hikes or is cutting rates (Accommodative).</label>
+            </div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk2" class="custom-chk">
+              <label for="mchk2" class="chk-label"><div class="chk-box-ui"></div> RBI domestic CPI inflation is within the safe target band (2% - 6%).</label>
+            </div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk3" class="custom-chk">
+              <label for="mchk3" class="chk-label"><div class="chk-box-ui"></div> Global Central Bank Balance Sheets are expanding (QE, not QT).</label>
+            </div>
+          </div>
+          
+          <div class="chk-section">
+            <div class="chk-title" style="color:var(--macro-purple);">02. The Yield Curve & Bonds</div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk4" class="custom-chk">
+              <label for="mchk4" class="chk-label"><div class="chk-box-ui"></div> The US 2Y/10Y Yield Curve is Normal (Not deeply inverted).</label>
+            </div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk5" class="custom-chk">
+              <label for="mchk5" class="chk-label"><div class="chk-box-ui"></div> The US 10-Year Treasury Yield is stable or falling (supporting high valuations).</label>
+            </div>
+          </div>
+
+          <div class="chk-section">
+            <div class="chk-title" style="color:var(--macro-emerald);">03. The Dollar & Commodities</div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk6" class="custom-chk">
+              <label for="mchk6" class="chk-label"><div class="chk-box-ui"></div> The Dollar Index (DXY) is in a downtrend or stable below critical resistance.</label>
+            </div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk7" class="custom-chk">
+              <label for="mchk7" class="chk-label"><div class="chk-box-ui"></div> Brent Crude Oil is trading below $80/barrel (low tax on Indian margins).</label>
+            </div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk8" class="custom-chk">
+              <label for="mchk8" class="chk-label"><div class="chk-box-ui"></div> The INR (Rupee) is stable, not facing rapid depreciation vs the USD.</label>
+            </div>
+          </div>
+
+          <div class="chk-section">
+            <div class="chk-title" style="color:var(--amber);">04. Cycle Alignment</div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk9" class="custom-chk">
+              <label for="mchk9" class="chk-label"><div class="chk-box-ui"></div> My portfolio sector allocation matches the current phase of the business cycle.</label>
+            </div>
+            <div class="chk-item">
+              <input type="checkbox" id="mchk10" class="custom-chk">
+              <label for="mchk10" class="chk-label"><div class="chk-box-ui"></div> FII flow data shows consistent net buying over a 4-week rolling period.</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="padding: 80px 100px; text-align: center; border-top: 1px solid var(--border); background: var(--surface); backdrop-filter: var(--surface-blur);">
+      <h3 style="font-family: 'Bebas Neue', sans-serif; font-size: 50px; color: var(--white); letter-spacing: 3px; text-shadow: var(--glow-cyan);">MACRO<span style="color:var(--macro-cyan)">.PRO</span></h3>
+      <p style="color: var(--text-muted); font-size: 16px; max-width: 600px; margin: 20px auto;">Top-Down Allocation. Global Liquidity. Institutional Edge.<br>For educational purposes only. Markets involve substantial risk.</p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+// Theme Toggle Logic
+const themeBtn = document.getElementById('themeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('macro_theme_v2');
+if (savedTheme) {
+  html.setAttribute('data-theme', savedTheme);
+} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+  html.setAttribute('data-theme', 'light');
+}
+
+themeBtn.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('macro_theme_v2', newTheme);
+});
+
+// Precision Custom Cursor
+if (window.matchMedia('(hover: hover)').matches) {
+  const cursor = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+  let rx = cx, ry = cy;
+
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+  });
+
+  function animateRing() {
+    rx += (cx - rx) * 0.15;
+    ry += (cy - ry) * 0.15;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.addEventListener('mousedown', () => {
+    cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+    ring.style.transform = 'translate(-50%, -50%) scale(0.4)';
+  });
+  document.addEventListener('mouseup', () => {
+    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    ring.style.transform = 'translate(-50%, -50%) scale(1)';
+  });
+}
+
+// Scroll Reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+reveals.forEach(el => observer.observe(el));
+
+// Scrollspy for Sidebar
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-link');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (pageYOffset >= (sectionTop - 300)) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href').includes(current)) {
+      link.classList.add('active');
+    }
+  });
+});
+
+// Mobile Sidebar Toggle
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if(window.innerWidth <= 1024) sidebar.classList.remove('open');
+  });
+});
+
+// Progress Bar
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById('progressBar').style.width = scrolled + '%';
+});
+
+// Interactive Checklist Persistent Storage
+const checkboxes = document.querySelectorAll('.custom-chk');
+checkboxes.forEach(chk => {
+  const savedState = localStorage.getItem('macro_chk_v2_' + chk.id);
+  if (savedState === 'true') chk.checked = true;
+  chk.addEventListener('change', (e) => {
+    localStorage.setItem('macro_chk_v2_' + e.target.id, e.target.checked);
+  });
+});
+</script>
+</body>
+</html>
